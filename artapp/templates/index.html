@@ -1,0 +1,39 @@
+{% extends 'nav.html' %}
+{% block content %}
+<div class="container content-container">
+    <div class="row">
+        <div class="col-md-3 mt-5">
+            <form action="{% url 'search_picture' %}" method="GET" class="mb-3 input-group">
+                <input type="text" name="search_term" class="form-control p-2 search" value="{{ search_term }}"
+                    placeholder="Search by title">
+                <button style="background-color: darkgray;" type="submit" class="btn btn-primary search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="col-md-9 mt-5">
+            <div class="row">
+                {% for b in pictures %}
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow p-3 gray-theme">
+                        <img src="{{ MEDIA_URL }}{{ b.image.url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title fw-boldclass="btn btn-primary search-btn"">{{ b.title }}</h5>
+                            <p class="card-text text-secondary">Price: ${{ b.price }}</p>
+                            {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'add' b.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-secondary btn-block mt-3" type="submit" value="add_to_cart" name="action">
+                                    <i class="bi bi-cart-fill me-2"></i> Add to Cart
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>                
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
